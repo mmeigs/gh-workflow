@@ -27,6 +27,8 @@ jobs:
         id: one-flow
         run: |
           echo "Discovering the environment stage:"
+          echo "${{ github.ref }}"
+          echo "${{ github.head_ref || github.ref_name  }}"
           if [[ ${{ github.ref != 'refs/heads/main' }} ]]; then
             response=$(curl --request GET --url 'https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/commits?page=1&per_page=1000' --header 'Accept: application/vnd.github.v3+json' --header 'Content-Type: application/json')
             last_commit_message=$(echo "$response" | jq '.[-1].commit.message')
