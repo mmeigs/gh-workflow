@@ -23,7 +23,7 @@ jobs:
         run: |
           timestamp=$(git log -1 --format=%cd --date=iso-strict)
           echo "::set-output name=commit_timestamp::$timestamp"
-      - if: github.ref != 'refs/heads/main'
+      - if: ${{ github.ref != 'refs/heads/main' }}
         name: Output commit message on the pull request
         id: commit_message_step
         run: |
@@ -32,7 +32,10 @@ jobs:
           echo "::set-output name=last_commit_message::$last_commit_message"
           echo "${{ github.head_ref || github.ref_name }}"
           echo "${{ (github.head_ref || github.ref_name) }} === main"
-      - if: github.ref == 'refs/heads/main'
+          echo "${{ github.ref }}"
+          echo "${{ github.head_ref }}"
+          echo "${{ github.ref_name }}"
+      - if: ${{ github.ref == 'refs/heads/main' }}
         name: Output commit message from main merge
         id: commit_message_main
         run: |
