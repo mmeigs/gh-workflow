@@ -23,23 +23,32 @@ jobs:
         run: |
           timestamp=$(git log -1 --format=%cd --date=iso-strict)
           echo "::set-output name=commit_timestamp::$timestamp"
-      - if: ${{ github.ref != 'refs/heads/main' }}
-        name: Output commit message on the pull request
-        id: commit_message_step
+      - name: One flow
+        id: one-flow
         run: |
-          response=$(curl --request GET --url 'https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/commits?page=1&per_page=1000' --header 'Accept: application/vnd.github.v3+json' --header 'Content-Type: application/json')
-          last_commit_message=$(echo "$response" | jq '.[-1].commit.message')
-          echo "::set-output name=last_commit_message::$last_commit_message"
-          echo "${{ github.head_ref || github.ref_name }}"
-          echo "${{ (github.head_ref || github.ref_name) }} === main"
-          echo "${{ github.ref }}"
-          echo "${{ github.head_ref }}"
-          echo "${{ github.ref_name }}"
-      - if: ${{ github.ref == 'refs/heads/main' }}
-        name: Output commit message from main merge
-        id: commit_message_main
-        run: |
-          echo "::set-output name=last_commit_message::${{ github.event.head_commit.message || github.event.workflow_run.head_commit.message }}"
+          echo "Discovering the environment stage:"
+          if [[ ${{ github.ref != 'refs/heads/main' }} ]]; then
+            response=$(curl --request GET --url 'https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/commits?page=1&per_page=1000' --header 'Accept: application/vnd.github.v3+json' --header 'Content-Type: application/json')
+            last_commit_message=$(echo "$response" | jq '.[-1].commit.message')
+            echo "COMMIT_MESSAGE=$last_commit_message"
+            COMMIT_MESSAGE=$last_commit_message
+            echo "COMMIT_MESSAGE=${COMMIT_MESSAGE}" >> $GITHUB_ENV
+          else
+            COMMIT_MESSAGE=${{ github.event.head_commit.message || github.event.workflow_run.head_commit.message }}
+            echo "COMMIT_MESSAGE=${COMMIT_MESSAGE}" >> $GITHUB_ENV
+          fi
+      # - if: ${{ github.ref != 'refs/heads/main' }}
+      #   name: Output commit message on the pull request
+      #   id: commit_message_step
+      #   run: |
+      #     response=$(curl --request GET --url 'https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/commits?page=1&per_page=1000' --header 'Accept: application/vnd.github.v3+json' --header 'Content-Type: application/json')
+      #     last_commit_message=$(echo "$response" | jq '.[-1].commit.message')
+      #     echo "COMMIT_MESSAGE=$last_commit_message" >> $GITHUB_OUTPUT
+      # - if: ${{ github.ref == 'refs/heads/main' }}
+      #   name: Output commit message from main merge
+      #   id: commit_message_main
+      #   run: |
+      #     echo "::set-output name=last_commit_message::${{ github.event.head_commit.message || github.event.workflow_run.head_commit.message }}"
       # - name: Upload Lighthouse to MongoDB
       #   uses: mongodb/docs-worker-actions/upload-lighthouse@main
       #   env:
@@ -52,4 +61,6 @@ jobs:
         id: output
         run: |
           echo "here we go"
-          echo "${{ fromJson(steps.commit_message_step.outputs.last_commit_message || '') }}"
+          echo "${{ steps.commit_message_step.outputs.COMMIT_MESSAGE }}"
+          echo "${{ steps.one-flow.outputs.COMMIT_MESSAGE }}"
+          echo "${{ env.COMMIT_MESSAGE }}"
