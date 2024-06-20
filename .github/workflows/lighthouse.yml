@@ -34,7 +34,6 @@ jobs:
             echo "COMMIT_MESSAGE=${{ github.event.head_commit.message || github.event.workflow_run.head_commit.message }}" >> "$GITHUB_OUTPUT"
           fi
           echo "Message is set:"
-          echo "${{ GITHUB_OUTPUT }}"
       # - if: ${{ github.ref != 'refs/heads/main' }}
       #   name: Output commit message on the pull request
       #   id: commit_message_step
