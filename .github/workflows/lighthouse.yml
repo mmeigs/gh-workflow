@@ -64,5 +64,4 @@ jobs:
         run: |
           echo "here we go"
           echo "${{ steps.commit_message_step.outputs.COMMIT_MESSAGE }}"
-          echo "${{ GITHUB_ENV }}"
           echo "${{ steps.one-flow.outputs.COMMIT_MESSAGE }}"
