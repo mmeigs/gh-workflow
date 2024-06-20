@@ -24,6 +24,7 @@ jobs:
           timestamp=$(git log -1 --format=%cd --date=iso-strict)
           echo "::set-output name=commit_timestamp::$timestamp"
       - name: One flow
+        id: one-flow
         run: |
           echo "Discovering the environment stage:"
           if [[ ${{ github.ref != 'refs/heads/main' }} ]]; then
@@ -33,9 +34,11 @@ jobs:
             COMMIT_MESSAGE=$last_commit_message
             echo "COMMIT_MESSAGE=${COMMIT_MESSAGE}" >> $GITHUB_ENV
           else
-            echo "COMMIT_MESSAGE=${{ github.event.head_commit.message || github.event.workflow_run.head_commit.message }}"
+            COMMIT_MESSAGE=${{ github.event.head_commit.message || github.event.workflow_run.head_commit.message }}
+            echo "COMMIT_MESSAGE=${COMMIT_MESSAGE}" >> $GITHUB_ENV
           fi
           echo "Message is set:"
+          echo "${{ GITHUB_ENV }}"
       # - if: ${{ github.ref != 'refs/heads/main' }}
       #   name: Output commit message on the pull request
       #   id: commit_message_step
@@ -61,3 +64,5 @@ jobs:
         run: |
           echo "here we go"
           echo "${{ steps.commit_message_step.outputs.COMMIT_MESSAGE }}"
+          echo "${{ GITHUB_ENV }}"
+          echo "${{ steps.one-flow.outputs.COMMIT_MESSAGE }}"
