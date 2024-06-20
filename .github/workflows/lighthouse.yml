@@ -36,7 +36,7 @@ jobs:
             COMMIT_MESSAGE=$last_commit_message
             echo "COMMIT_MESSAGE=${COMMIT_MESSAGE}" >> $GITHUB_ENV
           else
-            COMMIT_MESSAGE=Merge ${{ github.event.pull_request.number }}
+            COMMIT_MESSAGE="Merge PR ${{ github.event.number }}"
             echo "COMMIT_MESSAGE=${COMMIT_MESSAGE}" >> $GITHUB_ENV
           fi
       # - if: ${{ github.ref != 'refs/heads/main' }}
