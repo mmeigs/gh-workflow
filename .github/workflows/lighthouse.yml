@@ -38,7 +38,6 @@ jobs:
             echo "COMMIT_MESSAGE=${COMMIT_MESSAGE}" >> $GITHUB_ENV
           fi
           echo "Message is set:"
-          echo "${{ GITHUB_ENV }}"
       # - if: ${{ github.ref != 'refs/heads/main' }}
       #   name: Output commit message on the pull request
       #   id: commit_message_step
