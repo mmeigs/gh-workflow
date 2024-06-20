@@ -28,16 +28,15 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          echo "Discovering the environment stage:"
-          echo "${{ github.ref }}"
-          echo "${{ github.head_ref || github.ref_name  }}"
           if ${{ github.ref != 'refs/heads/main' }} == true; then
+            echo "In first conditional"
             response=$(curl --request GET --url 'https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/commits?page=1&per_page=1000' --header 'Accept: application/vnd.github.v3+json' --header 'Content-Type: application/json')
             last_commit_message=$(echo "$response" | jq '.[-1].commit.message')
             echo "COMMIT_MESSAGE=$last_commit_message"
             COMMIT_MESSAGE=$last_commit_message
             echo "COMMIT_MESSAGE=${COMMIT_MESSAGE}" >> $GITHUB_ENV
           else
+            echo "In else"
             COMMIT_MESSAGE="${{github.event.head_commit.message}}"
             echo "COMMIT_MESSAGE=${COMMIT_MESSAGE}" >> $GITHUB_ENV
           fi
@@ -65,7 +64,4 @@ jobs:
         id: output
         run: |
           echo "here we go"
-          echo "${{ steps.commit_message_step.outputs.COMMIT_MESSAGE }}"
-          echo "${{ steps.one-flow.outputs.COMMIT_MESSAGE }}"
           echo "${{ env.COMMIT_MESSAGE }}"
-          echo "${{ github.event.head_commit.message }}"
