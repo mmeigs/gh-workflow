@@ -39,7 +39,7 @@ jobs:
             echo "COMMIT_MESSAGE=${COMMIT_MESSAGE}" >> $GITHUB_ENV
           else
             pull_request_number=$(gh pr view --json number -q .number || echo "")
-            COMMIT_MESSAGE="Merge PR $pull_request_number"
+            COMMIT_MESSAGE=${{github.event.workflow_run.head_commit.message}}
             echo "$pull_request_number"
             echo "COMMIT_MESSAGE=${COMMIT_MESSAGE}" >> $GITHUB_ENV
           fi
@@ -70,4 +70,4 @@ jobs:
           echo "${{ steps.commit_message_step.outputs.COMMIT_MESSAGE }}"
           echo "${{ steps.one-flow.outputs.COMMIT_MESSAGE }}"
           echo "${{ env.COMMIT_MESSAGE }}"
-          echo "${{ env.HEAD_COMMIT_MESSAGE }}"
+          echo "${{ github.event.workflow_run.head_commit.message }}"
