@@ -37,8 +37,9 @@ jobs:
             echo "COMMIT_MESSAGE=${COMMIT_MESSAGE}" >> $GITHUB_ENV
           else
             echo "In else"
-            COMMIT_MESSAGE="${{github.event.head_commit.message}}"
-            echo "COMMIT_MESSAGE=${COMMIT_MESSAGE}" >> $GITHUB_ENV
+            FULL_MESSAGE="${{ github.event.head_commit.message }}"
+            FIRST_LINE=$(echo "$FULL_MESSAGE" | head -n 1)
+            echo "COMMIT_MESSAGE=${FIRST_LINE}" >> $GITHUB_ENV
           fi
       # - if: ${{ github.ref != 'refs/heads/main' }}
       #   name: Output commit message on the pull request
