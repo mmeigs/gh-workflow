@@ -38,6 +38,7 @@ jobs:
           else
             COMMIT_MESSAGE=${{ github.event.head_commit.message || github.event.workflow_run.head_commit.message }}
             echo "COMMIT_MESSAGE=${COMMIT_MESSAGE}" >> $GITHUB_ENV
+            echo "HEAD_COMMIT_MESSAGE=$(git show -s --format=%s)" >> "$GITHUB_ENV"
           fi
       # - if: ${{ github.ref != 'refs/heads/main' }}
       #   name: Output commit message on the pull request
@@ -66,3 +67,4 @@ jobs:
           echo "${{ steps.commit_message_step.outputs.COMMIT_MESSAGE }}"
           echo "${{ steps.one-flow.outputs.COMMIT_MESSAGE }}"
           echo "${{ env.COMMIT_MESSAGE }}"
+          echo "${{ env.HEAD_COMMIT_MESSAGE }}"
