@@ -33,7 +33,7 @@ jobs:
           echo "${{ github.head_ref || github.ref_name }}"
           echo "${{ (github.head_ref || github.ref_name) }} === main"
           echo "${{ github.ref }}"
-          echo "${{ github.head_ref }}
+          echo "${{ github.head_ref }}"
           echo "${{ github.ref_name }}"
       - if: ${{ github.ref == 'refs/heads/main' }}
         name: Output commit message from main merge
