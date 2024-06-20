@@ -64,3 +64,4 @@ jobs:
           echo "here we go"
           echo "${{ steps.commit_message_step.outputs.COMMIT_MESSAGE }}"
           echo "${{ steps.one-flow.outputs.COMMIT_MESSAGE }}"
+          echo "${{ env.COMMIT_MESSAGE }}""
