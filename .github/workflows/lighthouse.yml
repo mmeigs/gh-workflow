@@ -31,7 +31,7 @@ jobs:
           last_commit_message=$(echo "$response" | jq '.[-1].commit.message')
           echo "::set-output name=last_commit_message::$last_commit_message"
           echo "${{ github.head_ref || github.ref_name }}"
-          echo "${{ (github.head_ref || github.ref_name) === 'main' }}"
+          echo "${{ (github.head_ref || github.ref_name) }} === 'main'"
       - if: ${{ github.head_ref || github.ref_name }} === 'main'
         name: Output commit message from main merge
         id: commit_message_main
