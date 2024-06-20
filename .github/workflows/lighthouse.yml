@@ -25,6 +25,8 @@ jobs:
           echo "::set-output name=commit_timestamp::$timestamp"
       - name: One flow
         id: one-flow
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           echo "Discovering the environment stage:"
           echo "${{ github.ref }}"
